@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+html, body { margin: 0; padding: 0; background: #05080f; }
+* { box-sizing: border-box; }
+a { color: #c9b07a; text-decoration: none; }
+a:hover { color: #e6cd96; }
+input, button, select, textarea { font-family: inherit; }
+input::placeholder { color: #6b7b93; }
+input:focus-visible, button:focus-visible { outline: 2px solid #d9a94c; outline-offset: 2px; }
+::selection { background: rgba(217,169,76,0.3); }
+@keyframes dotPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; flex-direction: column; font-family: Archivo, system-ui, sans-serif; color: #f2f5fa; background: radial-gradient(120% 80% at 50% -12%, #16355c 0%, #0a1728 42%, #070d18 70%, #05080f 100%);">
+
+  <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: clamp(32px, 6vw, 56px) clamp(16px, 4vw, 20px) 80px;">
+
+    <sc-if value="{{ isHero }}" hint-placeholder-val="{{ true }}">
+      <div style="width: 100%; max-width: 780px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; animation: riseIn .4s ease both;">
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 11px 22px; border: 1px solid rgba(217,169,76,0.35); border-radius: 999px; background: rgba(217,169,76,0.07); font-size: clamp(12px, 2.9vw, 14px); font-weight: 500; letter-spacing: 0.02em; line-height: 1.45; text-align: center; color: #f0e6d2;">
+          <span style="width: 8px; height: 8px; border-radius: 999px; background: #3ddc84; box-shadow: 0 0 10px rgba(61,220,132,0.8); animation: dotPulse 2s ease-in-out infinite;"></span>
+          CLASE GRATUITA EN VIVO — JUEVES 20 DE AGOSTO, 20:30HS (ARG)
+        </div>
+        <div style="font-size: 14px; font-weight: 600; letter-spacing: 0.14em; color: #93a3ba; text-transform: uppercase;">Para los que quieren arrancar como closers desde cero</div>
+        <h1 style="margin: 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.08; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance;">Te doy mis secretos de cómo hice <span style="color: #dcb35e;">$15k mensuales</span> como closer y te <span style="color: #dcb35e;">conecto con una empresa</span></h1>
+        <p style="margin: 0; font-size: clamp(16px, 2vw, 20px); color: #9dabc0; font-weight: 400;">Sin experiencia previa. Sin tener un negocio. Sin invertir capital.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+      <div style="width: 100%; max-width: 560px; margin-top: 34px; display: flex; flex-direction: column; gap: 12px;">
+        <input value="{{ name }}" onChange="{{ onName }}" placeholder="Tu nombre" style="width: 100%; padding: 20px 22px; font-size: 17px; color: #f2f5fa; background: rgba(23,42,71,0.55); border: 1px solid #1e3454; border-radius: 12px;">
+        <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="Tu email" type="email" style="width: 100%; padding: 20px 22px; font-size: 17px; color: #f2f5fa; background: rgba(23,42,71,0.55); border: 1px solid #1e3454; border-radius: 12px;">
+        <div style="display: flex; align-items: stretch; gap: 12px;">
+          <sc-raw-select value="{{ country }}" onChange="{{ onCountry }}" style="flex: none; width: 128px; padding: 20px 12px; font-size: 17px; color: #f2f5fa; background: rgba(23,42,71,0.55); border: 1px solid #1e3454; border-radius: 12px; cursor: pointer;">
+            <sc-for list="{{ countries }}" as="c" hint-placeholder-count="19">
+              <option value="{{ c.id }}" style="background: #16273f; color: #f2f5fa;">{{ c.label }}</option>
+            </sc-for>
+          </sc-raw-select>
+          <input value="{{ phone }}" onChange="{{ onPhone }}" placeholder="Número de teléfono" style="flex: 1; min-width: 0; padding: 20px 22px; font-size: 17px; color: #f2f5fa; background: rgba(23,42,71,0.55); border: 1px solid #1e3454; border-radius: 12px;">
+        </div>
+        <button onClick="{{ goQ1 }}" style="margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 21px 24px; font-size: 17px; font-weight: 600; letter-spacing: 0.06em; color: #0a1728; background: linear-gradient(180deg, #e2bb69, #cf9f45); border: 0; border-radius: 12px; cursor: pointer; box-shadow: 0 10px 30px rgba(207,159,69,0.22);" style-hover="background: linear-gradient(180deg, #ecc87c, #d9ac52);" style-active="background: linear-gradient(180deg, #c6963c, #b8873a);">
+          {{ ctaLabel }}
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0a1728" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </button>
+        <p style="margin: 6px 0 0; text-align: center; font-size: 14px; color: #7f8fa5;">Es 100% gratis. Sin tarjeta de crédito. Clase en vivo — una sola vez.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ true }}">
+      <div style="width: 100%; max-width: 700px; margin-top: 10px; animation: riseIn .3s ease both;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+          <button onClick="{{ back }}" aria-label="Volver" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: transparent; border: 0; border-radius: 10px; cursor: pointer;" style-hover="background: rgba(255,255,255,0.06);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#cfd8e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+          <h2 style="margin: 0; font-size: clamp(20px, 2.6vw, 27px); font-weight: 600; letter-spacing: -0.015em;">{{ questionTitle }}</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <sc-for list="{{ options }}" as="opt" hint-placeholder-count="5">
+            <button onClick="{{ opt.select }}" style="width: 100%; text-align: left; padding: 22px 24px; font-size: 17px; font-weight: 400; color: #eef2f8; background: rgba(23,42,71,0.5); border: 1px solid #1e3454; border-radius: 12px; cursor: pointer; transition: background .15s, border-color .15s;" style-hover="background: rgba(35,60,96,0.75); border-color: #d9a94c;">{{ opt.label }}</button>
+          </sc-for>
+        </div>
+        <div style="margin-top: 26px; display: flex; align-items: center; gap: 12px;">
+          <div style="flex: 1; height: 3px; border-radius: 999px; background: #16273f; overflow: hidden;">
+            <div style="height: 100%; width: {{ progress }}; background: #d9a94c;"></div>
+          </div>
+          <span style="font-size: 13px; letter-spacing: 0.08em; color: #7f8fa5;">{{ stepLabel }}</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLast }}" hint-placeholder-val="{{ true }}">
+      <div style="width: 100%; max-width: 700px; margin-top: 10px; animation: riseIn .3s ease both;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+          <button onClick="{{ back }}" aria-label="Volver" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: transparent; border: 0; border-radius: 10px; cursor: pointer;" style-hover="background: rgba(255,255,255,0.06);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#cfd8e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+          <h2 style="margin: 0; font-size: clamp(20px, 2.6vw, 27px); font-weight: 600; letter-spacing: -0.015em;">Último paso</h2>
+        </div>
+        <label onClick="{{ toggleConsent }}" style="display: flex; align-items: flex-start; gap: 18px; padding: 24px; background: rgba(23,42,71,0.5); border: 1px solid #1e3454; border-radius: 12px; cursor: pointer;">
+          <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-top: 2px; border: 2px solid {{ consentBorder }}; border-radius: 6px; background: {{ consentFill }};">
+            <sc-if value="{{ consent }}" hint-placeholder-val="{{ false }}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a1728" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+            </sc-if>
+          </span>
+          <span style="font-size: 17px; line-height: 1.5; color: #eef2f8;">Acepto recibir comunicaciones de {{ brand }} con el link de acceso a la clase, recordatorios y novedades.</span>
+        </label>
+
+        <div style="margin: 20px auto 0; max-width: 420px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; padding: 16px 18px; background: #1a2740; border: 1px solid #2c405f; border-radius: 10px;">
+          <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 999px; background: #2fbf6b;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a1728" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          </span>
+          <span style="font-size: 15px; color: #dbe3ee;">Verificación de seguridad completada</span>
+          <span style="margin-left: auto; font-size: 11px; letter-spacing: 0.1em; color: #7f8fa5;">ANTI-SPAM</span>
+        </div>
+
+        <button onClick="{{ finish }}" disabled="{{ notConsented }}" style="margin-top: 20px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 21px 24px; font-size: 17px; font-weight: 600; letter-spacing: 0.06em; color: {{ finishColor }}; background: {{ finishBg }}; border: 1px solid {{ finishBorder }}; border-radius: 12px; cursor: pointer;">
+          QUIERO MI TICKET
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+      <div style="width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; animation: riseIn .4s ease both;">
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 11px 22px; border: 1px solid rgba(217,169,76,0.5); border-radius: 999px; background: rgba(217,169,76,0.1); font-size: 14px; font-weight: 600; color: #e8c274;">
+          <span style="width: 8px; height: 8px; border-radius: 999px; background: #e8c274; animation: dotPulse 2s ease-in-out infinite;"></span>
+          ALERTA — Falta un paso importante
+        </div>
+        <h1 style="margin: 26px 0 0; text-align: center; font-size: clamp(32px, 4.6vw, 54px); line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance;">ALERTA: Falta un paso para completar tu registro.</h1>
+        <p style="margin: 18px 0 0; text-align: center; font-size: clamp(16px, 2vw, 20px); color: #9dabc0;">Unite al grupo de WhatsApp para confirmar tu lugar.</p>
+
+        <div style="width: 100%; margin-top: 44px; padding: clamp(26px, 4vw, 46px); border: 1px solid rgba(217,169,76,0.55); border-radius: 18px; background: linear-gradient(180deg, rgba(217,169,76,0.09), rgba(217,169,76,0.02)); display: flex; flex-direction: column; align-items: center;">
+          <div style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 999px; background: rgba(217,169,76,0.18); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #f0cd83;">
+            <span style="width: 7px; height: 7px; border-radius: 999px; background: #f0cd83;"></span>
+            PASO FINAL — OBLIGATORIO
+          </div>
+          <h2 style="margin: 22px 0 0; font-size: clamp(24px, 3vw, 34px); font-weight: 700; letter-spacing: -0.02em;">Unite al grupo ahora</h2>
+          <p style="margin: 14px 0 0; text-align: center; font-size: 17px; color: #b9c5d5;">Sin este paso tu lugar <strong style="color: #e8c274; font-weight: 700;">no está confirmado.</strong></p>
+          <p style="margin: 6px 0 0; text-align: center; font-size: 16px; color: #8b9ab0;">Recibirás el link de acceso y recordatorios por este canal.</p>
+          <a href="{{ waLink }}" target="_blank" rel="noopener" style="margin-top: 30px; width: 100%; max-width: 520px; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 24px; font-size: 19px; font-weight: 700; color: #05230f; background: #2fd873; border-radius: 12px; box-shadow: 0 14px 40px rgba(47,216,115,0.24);" style-hover="background: #46e084; color: #05230f;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#05230f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
+            Unirme al grupo de WhatsApp
+          </a>
+          <p style="margin: 20px 0 0; max-width: 520px; text-align: center; font-size: 16px; line-height: 1.55; color: #8b9ab0;">Unite al grupo para recibir el link de la clase, contenido exclusivo antes del jueves, y todas las novedades.</p>
+        </div>
+
+        <div style="width: 100%; margin-top: 72px; display: flex; flex-direction: column; align-items: center;">
+          <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.16em; color: #93a3ba;">SIGUIENTES PASOS</div>
+          <h2 style="margin: 14px 0 40px; text-align: center; font-size: clamp(24px, 3.2vw, 34px); font-weight: 600; letter-spacing: -0.02em;">Esto es lo que tenés que hacer ahora</h2>
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 22px; padding: 26px; background: rgba(23,42,71,0.45); border: 1px solid #1e3454; border-radius: 14px;">
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 10px; background: rgba(217,169,76,0.12); border: 1px solid rgba(217,169,76,0.28);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcb35e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>
+              </span>
+              <div>
+                <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: #93a3ba;">PASO 01</div>
+                <div style="margin-top: 6px; font-size: 20px; font-weight: 600;">Unite al grupo de WhatsApp</div>
+                <div style="margin-top: 6px; font-size: 16px; color: #8b9ab0;">Haciendo clic en el botón verde. Sin este paso tu registro no está completo.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 22px; padding: 26px; background: rgba(23,42,71,0.45); border: 1px solid #1e3454; border-radius: 14px;">
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 10px; background: rgba(217,169,76,0.12); border: 1px solid rgba(217,169,76,0.28);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcb35e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"></path><path d="M4 6l8 6 8-6"></path></svg>
+              </span>
+              <div>
+                <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: #93a3ba;">PASO 02</div>
+                <div style="margin-top: 6px; font-size: 20px; font-weight: 600;">Revisá tu email</div>
+                <div style="margin-top: 6px; font-size: 16px; color: #8b9ab0;">Te mandé un mail de confirmación con toda la info.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 22px; padding: 26px; background: rgba(23,42,71,0.45); border: 1px solid #1e3454; border-radius: 14px;">
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 10px; background: rgba(217,169,76,0.12); border: 1px solid rgba(217,169,76,0.28);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcb35e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"></path></svg>
+              </span>
+              <div>
+                <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: #93a3ba;">PASO 03</div>
+                <div style="margin-top: 6px; font-size: 20px; font-weight: 600;">Poné una alarma</div>
+                <div style="margin-top: 6px; font-size: 16px; color: #8b9ab0;">Jueves 20 de agosto, 20:30hs (Argentina). Prepará compu y cuaderno. Lo mejor de la clase está en los primeros 20 minutos. No llegues tarde.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <footer style="border-top: 1px solid #14243c; padding: 30px 20px 34px;">
+    <div style="max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+      <div style="font-size: 16px; color: #b9c5d5;">2026 {{ brand }}. Todos los derechos reservados.</div>
+      <div style="display: flex; gap: 30px; font-size: 16px;">
+        <a href="Legales.dc.html#terminos">Terminos</a>
+        <a href="Legales.dc.html#privacidad">Privacidad</a>
+        <a href="Legales.dc.html#disclaimer">Earnings Disclaimer</a>
+      </div>
+    </div>
+    <p style="max-width: 900px; margin: 20px auto 0; text-align: center; font-size: 13px; line-height: 1.6; color: #5f6f86;">Disclaimer: Los resultados mostrados son ejemplos de alumnos reales. Los resultados individuales pueden variar y dependen del esfuerzo, experiencia y dedicación de cada persona. Este contenido es solo para fines educativos y no garantiza resultados específicos.</p>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;brand&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Scale Masters LLC&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;ctaLabel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;CONTINUAR&quot;,&quot;QUIERO MI TICKET&quot;],&quot;default&quot;:&quot;CONTINUAR&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappLink&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://chat.whatsapp.com/&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { step: 0, name: "", email: "", phone: "", country: "AR", country_code: "+54", consent: false, a1: null, a2: null };
+
+  set = (k) => (e) => this.setState({ [k]: e.target.value });
+
+  // `id` es único por país: EE.UU. y Rep. Dominicana comparten el +1, y un
+  // <select> controlado por código elegiría siempre el primero de los dos.
+  // Argentina primero, el resto alfabético.
+  countries = [
+    { id: "AR", code: "+54", label: "🇦🇷 +54" },
+    { id: "BO", code: "+591", label: "🇧🇴 +591" },
+    { id: "CL", code: "+56", label: "🇨🇱 +56" },
+    { id: "CO", code: "+57", label: "🇨🇴 +57" },
+    { id: "CR", code: "+506", label: "🇨🇷 +506" },
+    { id: "EC", code: "+593", label: "🇪🇨 +593" },
+    { id: "SV", code: "+503", label: "🇸🇻 +503" },
+    { id: "ES", code: "+34", label: "🇪🇸 +34" },
+    { id: "US", code: "+1", label: "🇺🇸 +1" },
+    { id: "GT", code: "+502", label: "🇬🇹 +502" },
+    { id: "HN", code: "+504", label: "🇭🇳 +504" },
+    { id: "MX", code: "+52", label: "🇲🇽 +52" },
+    { id: "NI", code: "+505", label: "🇳🇮 +505" },
+    { id: "PA", code: "+507", label: "🇵🇦 +507" },
+    { id: "PY", code: "+595", label: "🇵🇾 +595" },
+    { id: "PE", code: "+51", label: "🇵🇪 +51" },
+    { id: "DO", code: "+1", label: "🇩🇴 +1" },
+    { id: "UY", code: "+598", label: "🇺🇾 +598" },
+    { id: "VE", code: "+58", label: "🇻🇪 +58" }
+  ];
+
+  q1 = [
+    "Trabajo en relación de dependencia y busco una salida",
+    "Estudio / recién estoy arrancando mi vida laboral",
+    "Ya probé otros modelos online (dropshipping, trading, cursos) sin resultados",
+    "Ya me formé como closer pero no consigo oportunidades reales",
+    "Soy Closer y quiero llegar a 15K"
+  ];
+
+  q2 = ["Menos de 500 USD", "500 – 1.000 USD", "1.000 – 2.000 USD", "2.000 – 4.000 USD", "Más de 4.000 USD"];
+
+  renderVals() {
+    const s = this.state.step;
+    const isQ1 = s === 1, isQ2 = s === 2;
+    const list = isQ1 ? this.q1 : this.q2;
+    const key = isQ1 ? "a1" : "a2";
+    const consent = this.state.consent;
+    return {
+      isHero: s === 0,
+      isStep0: s === 0,
+      isQuestion: isQ1 || isQ2,
+      isLast: s === 3,
+      isDone: s === 4,
+      brand: this.props.brand ?? "Scale Masters LLC",
+      waLink: this.props.whatsappLink ?? "https://chat.whatsapp.com/",
+      ctaLabel: (this.props.ctaLabel ?? "CONTINUAR"),
+      name: this.state.name,
+      email: this.state.email,
+      phone: this.state.phone,
+      country: this.state.country,
+      countries: this.countries.map((c) => ({ id: c.id, label: c.label })),
+      onName: this.set("name"),
+      onEmail: this.set("email"),
+      onPhone: this.set("phone"),
+      onCountry: (e) => {
+        const id = e.target.value;
+        const c = this.countries.find((x) => x.id === id);
+        this.setState({ country: id, country_code: c ? c.code : "+54" });
+      },
+      goQ1: () => this.setState({ step: 1 }),
+      back: () => this.setState((st) => ({ step: Math.max(0, st.step - 1) })),
+      questionTitle: isQ1 ? "¿Cuál es tu situación hoy?" : "¿Cuánto generás por mes hoy?",
+      options: list.map((label) => ({
+        label,
+        select: () => this.setState({ [key]: label, step: s + 1 })
+      })),
+      progress: isQ1 ? "33%" : "66%",
+      stepLabel: isQ1 ? "1 / 3" : "2 / 3",
+      consent,
+      notConsented: !consent,
+      toggleConsent: () => this.setState({ consent: !consent }),
+      consentBorder: consent ? "#dcb35e" : "#4a5f7d",
+      consentFill: consent ? "#dcb35e" : "transparent",
+      finishBg: consent ? "linear-gradient(180deg, #e2bb69, #cf9f45)" : "rgba(23,42,71,0.5)",
+      finishColor: consent ? "#0a1728" : "#5f6f86",
+      finishBorder: consent ? "transparent" : "#1e3454",
+      finish: () => { if (consent) this.setState({ step: 4 }); }
+    };
+  }
+}
+</script>
+
+<!-- Envío de respuestas al proxy /api/lead + validación del paso 0.
+     No modifica support.js: observa DCLogic.prototype.setState desde afuera. -->
+<script>
+(function () {
+  "use strict";
+
+  var WEBHOOK = "/api/lead";
+  var yaEnviado = false;          // C2 — una sola vez por sesión
+  var CLASE_ERROR = "dc-error-campo";
+
+  /* ---------------- helpers ---------------- */
+
+  function param(nombre) {
+    try {
+      var v = new URLSearchParams(window.location.search).get(nombre);
+      return v === null || v === "" ? null : v;
+    } catch (e) { return null; }
+  }
+
+  function texto(v) {
+    if (v === null || v === undefined) return null;
+    var s = String(v).trim();
+    return s === "" ? null : s;
+  }
+
+  // El input guarda solo el número nacional: descartamos espacios, guiones,
+  // paréntesis y cualquier otro separador.
+  function digitosTelefono(v) {
+    return String(v || "").replace(/\D/g, "");
+  }
+
+  /* ---------------- POST al webhook ---------------- */
+
+  function enviar(estado) {
+    var cc = texto(estado.country_code) || "+54";
+    var nacional = digitosTelefono(estado.phone);
+
+    var payload = {
+      evento: "registro_completo",
+
+      // campos del formulario, con las claves originales del componente
+      name: texto(estado.name),
+      email: texto(estado.email),
+      country_code: cc,
+      phone: nacional || null,
+      phone_full: nacional ? "+" + digitosTelefono(cc) + nacional : null,
+      a1: texto(estado.a1),
+      a2: texto(estado.a2),
+      consent: estado.consent === true,
+
+      // atribución
+      utm_source: param("utm_source"),
+      utm_medium: param("utm_medium"),
+      utm_campaign: param("utm_campaign"),
+      utm_content: param("utm_content"),
+      utm_term: param("utm_term"),
+      fbclid: param("fbclid"),
+      gclid: param("gclid"),
+
+      // contexto
+      page_url: window.location.href,
+      referrer: document.referrer || null,
+      timestamp: new Date().toISOString()
+    };
+
+    // keepalive: el usuario se va a WhatsApp enseguida; el POST sobrevive igual.
+    fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).then(function (r) {
+      if (!r.ok) console.error("[webhook] respuesta " + r.status + " " + r.statusText);
+    }).catch(function (e) {
+      // El lead se pierde en el log, pero el usuario ya está viendo la pantalla final.
+      console.error("[webhook] no se pudo enviar el registro:", e);
+    });
+  }
+
+  /* ---------------- validación del paso 0 (C4) ---------------- */
+
+  function campos() {
+    var nombre = document.querySelector('input[placeholder="Tu nombre"]');
+    var email = document.querySelector('input[placeholder="Tu email"]');
+    var tel = document.querySelector('input[placeholder="Número de teléfono"]');
+    if (!nombre || !email || !tel || !nombre.parentElement) return null;
+    return {
+      nombre: nombre,
+      email: email,
+      tel: tel,
+      // la fila que agrupa el selector de país y el número
+      telFila: tel.parentElement,
+      boton: nombre.parentElement.querySelector("button")
+    };
+  }
+
+  // `ancla` es el nodo debajo del cual aparece el mensaje; `borde` es el que
+  // se pinta de rojo. Para el teléfono no son el mismo elemento: el mensaje va
+  // debajo de la fila completa, pero el borde se pinta solo en el input.
+  function limpiarError(ancla, borde) {
+    borde = borde || ancla;
+    var sig = ancla.nextSibling;
+    if (sig && sig.nodeType === 1 && sig.className === CLASE_ERROR) {
+      ancla.parentNode.removeChild(sig);
+    }
+    if (borde.dataset && borde.dataset.bordeOriginal !== undefined) {
+      borde.style.borderColor = borde.dataset.bordeOriginal;
+      delete borde.dataset.bordeOriginal;
+    }
+  }
+
+  function marcarError(ancla, mensaje, borde) {
+    borde = borde || ancla;
+    limpiarError(ancla, borde);
+    if (borde.dataset.bordeOriginal === undefined) {
+      borde.dataset.bordeOriginal = borde.style.borderColor || "";
+    }
+    borde.style.borderColor = "#e0605f";
+    var p = document.createElement("p");
+    p.className = CLASE_ERROR;
+    p.textContent = mensaje;
+    p.style.cssText = "margin: 2px 0 0; padding-left: 4px; font-size: 14px; color: #e0605f;";
+    ancla.parentNode.insertBefore(p, ancla.nextSibling);
+  }
+
+  function validar(c) {
+    limpiarError(c.nombre);
+    limpiarError(c.email);
+    limpiarError(c.telFila, c.tel);
+
+    var ok = true;
+
+    if (c.nombre.value.trim().length < 2) {
+      marcarError(c.nombre, "Ingresá tu nombre (mínimo 2 caracteres).");
+      ok = false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email.value.trim())) {
+      marcarError(c.email, "Ingresá un email válido.");
+      ok = false;
+    }
+    var digitos = digitosTelefono(c.tel.value).length;
+    if (digitos < 6 || digitos > 15) {
+      marcarError(c.telFila, "Ingresá tu número sin el código de país (entre 6 y 15 dígitos).", c.tel);
+      ok = false;
+    }
+    return ok;
+  }
+
+  // Fase de captura: corre antes que el listener de React, así podemos frenar
+  // el avance de paso sin que el componente se entere.
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
+    if (!btn) return;
+
+    var c = campos();
+
+    if (c && btn === c.boton) {
+      if (!validar(c)) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+      }
+      return;
+    }
+
+    // Paso final: evita el doble clic. Se difiere para no cortar la
+    // propagación del click que React todavía tiene que procesar.
+    if (!c && /QUIERO MI TICKET/i.test(btn.textContent || "")) {
+      setTimeout(function () {
+        btn.disabled = true;
+        btn.style.opacity = "0.65";
+        btn.style.cursor = "default";
+      }, 0);
+    }
+  }, true);
+
+  // Al corregir un campo desaparece su mensaje de error.
+  document.addEventListener("input", function (ev) {
+    var el = ev.target;
+    if (!el || el.tagName !== "INPUT") return;
+    var c = campos();
+    if (!c) return;
+    if (el === c.nombre) limpiarError(c.nombre);
+    else if (el === c.email) limpiarError(c.email);
+    else if (el === c.tel) limpiarError(c.telFila, c.tel);
+  }, true);
+
+  /* ---------------- observador de setState (C1) ---------------- */
+
+  function instalarObservador(DCLogic) {
+    var original = DCLogic.prototype.setState;
+    if (!original || original.__webhookInstalado) return;
+
+    function setStateObservado() {
+      // C1 — no interpretamos el argumento (puede ser objeto o updater):
+      // delegamos tal cual y solo observamos el resultado.
+      var resultado = original.apply(this, arguments);
+      try {
+        var st = this.state;
+        if (st && st.step === 4 && !yaEnviado) {
+          yaEnviado = true;
+          enviar(st);
+        }
+      } catch (e) {
+        console.error("[webhook] error al leer el estado:", e);
+      }
+      return resultado;
+    }
+
+    setStateObservado.__webhookInstalado = true;
+    DCLogic.prototype.setState = setStateObservado;
+  }
+
+  /* ---------------- espera acotada del runtime (C3) ---------------- */
+
+  var intentos = 0;
+  var MAX_INTENTOS = 100;   // 100 x 100ms = 10s
+  var reloj = setInterval(function () {
+    if (window.DCLogic && window.DCLogic.prototype) {
+      clearInterval(reloj);
+      try {
+        instalarObservador(window.DCLogic);
+      } catch (e) {
+        console.error("[webhook] no se pudo instalar el observador:", e);
+      }
+      return;
+    }
+    if (++intentos >= MAX_INTENTOS) {
+      clearInterval(reloj);
+      console.warn("[webhook] DCLogic no apareció tras 10s: el envío al webhook queda desactivado.");
+    }
+  }, 100);
+})();
+</script>
+</body>
+</html>

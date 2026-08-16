@@ -184,9 +184,9 @@ input:focus-visible, button:focus-visible { outline: 2px solid #d9a94c; outline-
     <div style="max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
       <div style="font-size: 16px; color: #b9c5d5;">2026 {{ brand }}. Todos los derechos reservados.</div>
       <div style="display: flex; gap: 30px; font-size: 16px;">
-        <a href="Legales.dc.html#terminos">Terminos</a>
-        <a href="Legales.dc.html#privacidad">Privacidad</a>
-        <a href="Legales.dc.html#disclaimer">Earnings Disclaimer</a>
+        <a href="Legales.dc.html#terminos" target="_blank" rel="noopener noreferrer">Terminos</a>
+        <a href="Legales.dc.html#privacidad" target="_blank" rel="noopener noreferrer">Privacidad</a>
+        <a href="Legales.dc.html#disclaimer" target="_blank" rel="noopener noreferrer">Earnings Disclaimer</a>
       </div>
     </div>
     <p style="max-width: 900px; margin: 20px auto 0; text-align: center; font-size: 13px; line-height: 1.6; color: #5f6f86;">Disclaimer: Los resultados mostrados son ejemplos de alumnos reales. Los resultados individuales pueden variar y dependen del esfuerzo, experiencia y dedicación de cada persona. Este contenido es solo para fines educativos y no garantiza resultados específicos.</p>
@@ -472,6 +472,131 @@ class Component extends DCLogic {
     else if (el === c.tel) limpiarError(c.telFila, c.tel);
   }, true);
 
+  /* ---------------- persistencia del wizard ---------------- */
+  // sessionStorage (no localStorage): el contexto dura lo que dura la pestaña.
+  // Todo va envuelto en try/catch — en incógnito o con el storage lleno la
+  // landing tiene que seguir funcionando igual.
+
+  var CLAVE_ESTADO = "dc_wizard_estado";
+  var CLAVE_ENVIADO = "dc_wizard_enviado";
+  var CLAVE_SCROLL = "dc_wizard_scroll";
+  var CAMPOS_PERSISTIDOS = ["step", "name", "email", "phone", "country", "country_code", "a1", "a2"];
+
+  function leerSesion(clave) {
+    try {
+      return window.sessionStorage.getItem(clave);
+    } catch (e) { return null; }
+  }
+
+  function escribirSesion(clave, valor) {
+    try {
+      window.sessionStorage.setItem(clave, valor);
+    } catch (e) { /* storage no disponible: seguimos sin persistir */ }
+  }
+
+  // La bandera anti-duplicado sobrevive a un reload.
+  if (leerSesion(CLAVE_ENVIADO) === "true") yaEnviado = true;
+
+  function guardarEstado(st) {
+    if (!st) return;
+    var recorte = {};
+    for (var i = 0; i < CAMPOS_PERSISTIDOS.length; i++) {
+      var k = CAMPOS_PERSISTIDOS[i];
+      if (st[k] !== undefined) recorte[k] = st[k];
+    }
+    try {
+      escribirSesion(CLAVE_ESTADO, JSON.stringify(recorte));
+    } catch (e) { /* ignorado a propósito */ }
+  }
+
+  function leerEstadoGuardado() {
+    var crudo = leerSesion(CLAVE_ESTADO);
+    if (!crudo) return null;
+    var st;
+    try {
+      st = JSON.parse(crudo);
+    } catch (e) { return null; }
+    if (!st || typeof st !== "object") return null;
+
+    // El paso 4 es la pantalla de gracias: solo se restaura si el registro
+    // realmente se envió. Si no, se arranca de cero, para no mostrar el
+    // "gracias" a alguien que nunca se registró ni disparar un POST duplicado.
+    if (st.step === 4 && leerSesion(CLAVE_ENVIADO) !== "true") return null;
+
+    return st;
+  }
+
+  function tieneDatos(st) {
+    return !!(st && (st.step > 0 || st.name || st.email || st.phone || st.a1 || st.a2));
+  }
+
+  /* ---------------- scroll ---------------- */
+
+  var relojScroll = null;
+  window.addEventListener("scroll", function () {
+    if (relojScroll) clearTimeout(relojScroll);
+    relojScroll = setTimeout(function () {
+      escribirSesion(CLAVE_SCROLL, String(window.scrollY || 0));
+    }, 150);
+  }, { passive: true });
+
+  function restaurarScroll() {
+    var y = parseInt(leerSesion(CLAVE_SCROLL) || "0", 10);
+    if (!y || isNaN(y)) return;
+    // Dos frames: el primero deja que React pinte, el segundo asegura que la
+    // altura del documento ya exista antes de saltar.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        window.scrollTo(0, y);
+      });
+    });
+  }
+
+  /* ---------------- propagación de UTMs (C) ---------------- */
+
+  // Los links a Legales abren en pestaña nueva, así que la pestaña original
+  // nunca se pierde. Esto es defensivo: si alguien comparte o recarga desde
+  // Legales, la atribución viaja con él.
+  function propagarQuery() {
+    var query = window.location.search;
+    if (!query || query === "?") return;
+    var links = document.querySelectorAll('a[href*="Legales.dc.html"]');
+    for (var i = 0; i < links.length; i++) {
+      var href = links[i].getAttribute("href") || "";
+      if (href.indexOf("?") !== -1) continue;         // ya la tiene
+      var corte = href.indexOf("#");
+      var base = corte === -1 ? href : href.slice(0, corte);
+      var hash = corte === -1 ? "" : href.slice(corte);
+      links[i].setAttribute("href", base + query + hash);
+    }
+  }
+
+  /* ---------------- restauración al montar ---------------- */
+
+  function instalarRestauracion(DCLogic) {
+    var original = DCLogic.prototype.componentDidMount;
+    if (!original || original.__restauracionInstalada) return;
+
+    function componentDidMountObservado() {
+      var resultado = original.apply(this, arguments);
+      try {
+        propagarQuery();
+
+        var guardado = leerEstadoGuardado();
+        if (guardado && tieneDatos(guardado)) {
+          this.setState(guardado);
+          restaurarScroll();
+        }
+      } catch (e) {
+        console.error("[wizard] no se pudo restaurar el estado:", e);
+      }
+      return resultado;
+    }
+
+    componentDidMountObservado.__restauracionInstalada = true;
+    DCLogic.prototype.componentDidMount = componentDidMountObservado;
+  }
+
   /* ---------------- observador de setState (C1) ---------------- */
 
   function instalarObservador(DCLogic) {
@@ -486,8 +611,11 @@ class Component extends DCLogic {
         var st = this.state;
         if (st && st.step === 4 && !yaEnviado) {
           yaEnviado = true;
+          escribirSesion(CLAVE_ENVIADO, "true");
           enviar(st);
         }
+        guardarEstado(st);
+        propagarQuery();
       } catch (e) {
         console.error("[webhook] error al leer el estado:", e);
       }
@@ -496,6 +624,36 @@ class Component extends DCLogic {
 
     setStateObservado.__webhookInstalado = true;
     DCLogic.prototype.setState = setStateObservado;
+  }
+
+  /* ---------------- intercepción temprana del runtime ---------------- */
+
+  // support.js asigna window.DCLogic y bootea React en el MISMO tick, así que
+  // el poll de abajo (cada 100ms) puede llegar después del montaje y perderse
+  // el componentDidMount. Interceptamos la asignación para parchear justo
+  // antes del boot. El poll queda como respaldo: ambos son idempotentes.
+  try {
+    if (!("DCLogic" in window)) {
+      var _dcLogic;
+      Object.defineProperty(window, "DCLogic", {
+        configurable: true,
+        enumerable: true,
+        get: function () { return _dcLogic; },
+        set: function (v) {
+          _dcLogic = v;
+          try {
+            if (v && v.prototype) {
+              instalarObservador(v);
+              instalarRestauracion(v);
+            }
+          } catch (e) {
+            console.error("[wizard] no se pudo parchear el runtime:", e);
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error("[wizard] no se pudo interceptar DCLogic:", e);
   }
 
   /* ---------------- espera acotada del runtime (C3) ---------------- */
@@ -507,6 +665,7 @@ class Component extends DCLogic {
       clearInterval(reloj);
       try {
         instalarObservador(window.DCLogic);
+        instalarRestauracion(window.DCLogic);
       } catch (e) {
         console.error("[webhook] no se pudo instalar el observador:", e);
       }

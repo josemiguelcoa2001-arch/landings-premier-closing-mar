@@ -25,7 +25,7 @@ a:focus-visible { outline: 2px solid #d9a94c; outline-offset: 3px; }
 
   <header style="position: sticky; top: 0; z-index: 5; backdrop-filter: blur(10px); background: rgba(7,13,24,0.82); border-bottom: 1px solid #14243c;">
     <div style="max-width: 980px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px;">
-      <a href="Clase Closers Landing.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: #9dabc0;">
+      <a href="./" style="display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: #9dabc0;">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"></path></svg>
         Volver
       </a>
@@ -273,9 +273,44 @@ a:focus-visible { outline: 2px solid #d9a94c; outline-offset: 3px; }
 
     <div style="margin: 64px 0 0; height: 2px; background: #1e3454;"></div>
     <p style="margin: 30px 0 0; font-size: 15px; color: #7f8fa5;">SCALE MASTERS LLC — Delaware, Estados Unidos. Consultas: <a href="mailto:contact@scalemasterteam.com">contact@scalemasterteam.com</a></p>
-    <p style="margin: 10px 0 0;"><a href="Clase Closers Landing.dc.html" style="font-size: 15px;">← Volver a la clase gratuita</a></p>
+    <p style="margin: 10px 0 0;"><a href="./" style="font-size: 15px;">← Volver a la clase gratuita</a></p>
   </div>
 </div>
 </x-dc>
+
+<!-- Propaga la query string (UTMs, fbclid, gclid) a los links de vuelta,
+     para que la atribución sobreviva si alguien llega acá directo. -->
+<script>
+(function () {
+  "use strict";
+
+  function propagarQuery() {
+    var query = window.location.search;
+    if (!query || query === "?") return;
+    var links = document.querySelectorAll('a[href^="./"]');
+    for (var i = 0; i < links.length; i++) {
+      var href = links[i].getAttribute("href") || "";
+      if (href.indexOf("?") !== -1) continue;         // ya la tiene
+      var corte = href.indexOf("#");
+      var base = corte === -1 ? href : href.slice(0, corte);
+      var hash = corte === -1 ? "" : href.slice(corte);
+      links[i].setAttribute("href", base + query + hash);
+    }
+  }
+
+  try {
+    propagarQuery();
+    // El runtime .dc monta el contenido de forma asíncrona: reintentamos
+    // una vez ya montado para alcanzar los links que todavía no existían.
+    var intentos = 0;
+    var reloj = setInterval(function () {
+      propagarQuery();
+      if (++intentos >= 20) clearInterval(reloj);     // 20 x 100ms = 2s
+    }, 100);
+  } catch (e) {
+    console.error("[legales] no se pudo propagar la query:", e);
+  }
+})();
+</script>
 </body>
 </html>

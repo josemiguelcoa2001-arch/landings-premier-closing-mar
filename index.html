@@ -132,10 +132,23 @@ input:focus-visible, button:focus-visible { outline: 2px solid #d9a94c; outline-
           <h2 style="margin: 22px 0 0; font-size: clamp(24px, 3vw, 34px); font-weight: 700; letter-spacing: -0.02em;">Unite al grupo ahora</h2>
           <p style="margin: 14px 0 0; text-align: center; font-size: 17px; color: #b9c5d5;">Sin este paso tu lugar <strong style="color: #e8c274; font-weight: 700;">no está confirmado.</strong></p>
           <p style="margin: 6px 0 0; text-align: center; font-size: 16px; color: #8b9ab0;">Recibirás el link de acceso y recordatorios por este canal.</p>
-          <a href="{{ waLink }}" target="_blank" rel="noopener" style="margin-top: 30px; width: 100%; max-width: 520px; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 24px; font-size: 19px; font-weight: 700; color: #05230f; background: #2fd873; border-radius: 12px; box-shadow: 0 14px 40px rgba(47,216,115,0.24);" style-hover="background: #46e084; color: #05230f;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#05230f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
-            Unirme al grupo de WhatsApp
-          </a>
+          <!-- El botón sale de /api/config, no de un link en el código.
+               Son dos elementos y no uno con el href cambiado: el estado
+               deshabilitado es un <div> sin href, así que no hay forma de que
+               un click "casi funcione". Ver el bloque [whatsapp-config]. -->
+          <sc-if value="{{ waListo }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ waUrl }}" target="_blank" rel="noopener" style="margin-top: 30px; width: 100%; max-width: 520px; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 24px; font-size: 19px; font-weight: 700; color: #05230f; background: #2fd873; border-radius: 12px; box-shadow: 0 14px 40px rgba(47,216,115,0.24);" style-hover="background: #46e084; color: #05230f;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#05230f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
+              Unirme al grupo de WhatsApp
+            </a>
+          </sc-if>
+          <sc-if value="{{ waNoListo }}" hint-placeholder-val="{{ true }}">
+            <div role="link" aria-disabled="true" style="margin-top: 30px; width: 100%; max-width: 520px; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 24px; font-size: 19px; font-weight: 700; color: {{ waColor }}; background: {{ waFondo }}; border: 1px solid {{ waBorde }}; border-radius: 12px; cursor: not-allowed; opacity: 0.6;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
+              {{ waTexto }}
+            </div>
+            <p style="margin: 14px 0 0; max-width: 520px; text-align: center; font-size: 15px; line-height: 1.5; color: {{ waColor }};">{{ waAyuda }}</p>
+          </sc-if>
           <p style="margin: 20px 0 0; max-width: 520px; text-align: center; font-size: 16px; line-height: 1.55; color: #8b9ab0;">Unite al grupo para recibir el link de la clase, contenido exclusivo antes del jueves, y todas las novedades.</p>
         </div>
 
@@ -193,7 +206,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid #d9a94c; outline-
   </footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;brand&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Scale Masters LLC&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;ctaLabel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;CONTINUAR&quot;,&quot;QUIERO MI TICKET&quot;],&quot;default&quot;:&quot;CONTINUAR&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappLink&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://chat.whatsapp.com/&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;brand&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Scale Masters LLC&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;ctaLabel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;CONTINUAR&quot;,&quot;QUIERO MI TICKET&quot;],&quot;default&quot;:&quot;CONTINUAR&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = { step: 0, name: "", email: "", phone: "", country: "AR", country_code: "+54", consent: false, a1: null, a2: null };
 
@@ -234,6 +247,35 @@ class Component extends DCLogic {
 
   q2 = ["Menos de 500 USD", "500 – 1.000 USD", "1.000 – 2.000 USD", "2.000 – 4.000 USD", "Más de 4.000 USD"];
 
+  // Estado del link de WhatsApp, publicado por el bloque [whatsapp-config] del
+  // script de abajo. Se lee acá y no se guarda en this.state a propósito: el
+  // valor es global a la página, no del wizard, y meterlo en el estado lo haría
+  // viajar a sessionStorage y al webhook junto con las respuestas.
+  //
+  // Si el script externo no llegó a correr, no hay config y queda "pendiente",
+  // que es deshabilitado. Falla cerrado: nunca un botón que parece andar.
+  wa() {
+    const c = (typeof window !== "undefined" && window.__waConfig) || null;
+    const estado = c && c.estado ? c.estado : "pendiente";
+    const url = c && typeof c.url === "string" ? c.url : "";
+    const listo = estado === "listo" && url !== "";
+    const fallo = estado === "fallo";
+    return {
+      waListo: listo,
+      waNoListo: !listo,
+      waUrl: listo ? url : "",
+      waTexto: fallo ? "No se pudo cargar el link, escribinos" : "Cargando el link…",
+      waAyuda: fallo
+        ? "Escribinos y te sumamos al grupo a mano. Tu registro ya quedó guardado."
+        : "Un segundo, estamos preparando tu acceso.",
+      // El fallo se ve rojo, no gris apagado: gris se lee como "todavía está
+      // cargando" y el usuario espera de más en vez de escribir.
+      waColor: fallo ? "#f0b4b4" : "#8b9ab0",
+      waFondo: fallo ? "rgba(215,72,72,0.12)" : "rgba(23,42,71,0.5)",
+      waBorde: fallo ? "rgba(215,72,72,0.55)" : "#1e3454"
+    };
+  }
+
   renderVals() {
     const s = this.state.step;
     const isQ1 = s === 1, isQ2 = s === 2;
@@ -241,13 +283,13 @@ class Component extends DCLogic {
     const key = isQ1 ? "a1" : "a2";
     const consent = this.state.consent;
     return {
+      ...this.wa(),
       isHero: s === 0,
       isStep0: s === 0,
       isQuestion: isQ1 || isQ2,
       isLast: s === 3,
       isDone: s === 4,
       brand: this.props.brand ?? "Scale Masters LLC",
-      waLink: this.props.whatsappLink ?? "https://chat.whatsapp.com/",
       ctaLabel: (this.props.ctaLabel ?? "CONTINUAR"),
       name: this.state.name,
       email: this.state.email,
@@ -294,6 +336,10 @@ class Component extends DCLogic {
   var WEBHOOK = "/api/lead";
   var yaEnviado = false;          // C2 — una sola vez por sesión
   var CLASE_ERROR = "dc-error-campo";
+
+  // Instancia del componente, capturada al montar. La usa el bloque
+  // [whatsapp-config] para forzar un re-render cuando llega la config.
+  var instanciaLogica = null;
 
   /* ---------------- helpers ---------------- */
 
@@ -580,6 +626,12 @@ class Component extends DCLogic {
     function componentDidMountObservado() {
       var resultado = original.apply(this, arguments);
       try {
+        // Guardamos la instancia para poder re-renderizar cuando llegue la
+        // config de WhatsApp. Si /api/config resuelve después del montaje,
+        // renderVals() ya corrió con el valor viejo y nadie lo volvería a
+        // llamar solo: sin esto el botón queda deshabilitado para siempre.
+        instanciaLogica = this;
+
         propagarQuery();
 
         var guardado = leerEstadoGuardado();
@@ -654,6 +706,84 @@ class Component extends DCLogic {
     }
   } catch (e) {
     console.error("[wizard] no se pudo interceptar DCLogic:", e);
+  }
+
+  /* ---------------- [whatsapp-config] link del grupo ---------------- */
+
+  // El link del grupo NO está en este archivo. Vive en la env var
+  // WHATSAPP_GROUP_URL de Vercel y llega por /api/config.
+  //
+  // El botón arranca deshabilitado y solo se habilita si la respuesta llega a
+  // tiempo con un link no vacío. Cualquier otra cosa —red caída, timeout, env
+  // var sin cargar, JSON roto— lo deja deshabilitado y visible como error. La
+  // regla es que nunca puede parecer que funciona sin funcionar: un botón verde
+  // que no lleva a ningún lado pierde al inscripto en silencio.
+  var WA_TIMEOUT_MS = 5000;
+
+  // Estado global que lee renderVals(). Se publica ya mismo, no cuando resuelve
+  // el fetch: si el componente monta antes, tiene que encontrar "pendiente" y
+  // no undefined.
+  window.__waConfig = { estado: "pendiente", url: "" };
+
+  function fijarWaConfig(estado, url) {
+    window.__waConfig = { estado: estado, url: url || "" };
+    try {
+      // El componente puede no estar montado todavía; ahí no hace falta nada,
+      // porque su primer render ya va a leer el valor definitivo.
+      if (instanciaLogica && typeof instanciaLogica.forceUpdate === "function") {
+        instanciaLogica.forceUpdate();
+      }
+    } catch (e) {
+      console.error("[whatsapp-config] no se pudo refrescar el boton:", e);
+    }
+  }
+
+  try {
+    var controlWa = new AbortController();
+    // AbortController corta el fetch, pero el timeout tiene que resolver el
+    // estado igual: si el navegador no soporta abort, el catch de abajo no se
+    // dispararía nunca y el boton quedaria "cargando" para siempre.
+    var relojWa = setTimeout(function () {
+      try { controlWa.abort(); } catch (e) {}
+      if (window.__waConfig.estado === "pendiente") {
+        console.error(
+          "[whatsapp-config] /api/config no respondio en " + WA_TIMEOUT_MS + "ms"
+        );
+        fijarWaConfig("fallo", "");
+      }
+    }, WA_TIMEOUT_MS);
+
+    fetch("/api/config", { signal: controlWa.signal })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        clearTimeout(relojWa);
+        var url = data && typeof data.whatsappGroupUrl === "string"
+          ? data.whatsappGroupUrl.trim()
+          : "";
+        if (!url) {
+          console.error(
+            "[whatsapp-config] el endpoint respondio sin link: falta cargar " +
+            "WHATSAPP_GROUP_URL en las variables de entorno de Vercel"
+          );
+          fijarWaConfig("fallo", "");
+          return;
+        }
+        fijarWaConfig("listo", url);
+      })
+      .catch(function (e) {
+        clearTimeout(relojWa);
+        // Si el timeout ya resolvió el estado, este catch es el AbortError que
+        // él mismo provocó: no lo reportamos dos veces.
+        if (window.__waConfig.estado !== "pendiente") return;
+        console.error("[whatsapp-config] no se pudo leer /api/config:", e);
+        fijarWaConfig("fallo", "");
+      });
+  } catch (e) {
+    console.error("[whatsapp-config] no se pudo pedir la configuracion:", e);
+    fijarWaConfig("fallo", "");
   }
 
   /* ---------------- espera acotada del runtime (C3) ---------------- */
